@@ -1,0 +1,504 @@
+/* ============================================================
+       EOS — token system
+       Concept: a hand-built precision optics case. Brass rivets pin
+       every panel like a cased instrument; a display serif carries
+       the brand voice, a mono face carries every live reading. The
+       signature element is the brass aperture-iris mark, which
+       physically opens when the live link goes active.
+       ============================================================ */
+    :root {
+      --bg-void: #0a0805;
+      --bg-panel: #14100a;
+      --bg-panel-raised: #1b150c;
+      --bg-well: #050403;
+
+      --gold: #c9a76a;
+      --gold-bright: #ecd9a8;
+      --gold-dim: #7d6339;
+      --brass: #9c7f4a;
+
+      --ink: #efe7d4;
+      --ink-muted: #9a9077;
+      --ink-faint: #5c5644;
+
+      --border: #322a17;
+      --border-bright: #4a3d20;
+
+      --jewel-emerald: #2f5c46;
+      --jewel-emerald-bright: #4fae82;
+      --jewel-ruby: #7a2b2b;
+      --jewel-ruby-bright: #d9604f;
+
+      --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+
+      --shadow-deep: 0 18px 40px rgba(0,0,0,0.55);
+      --shadow-soft: 0 6px 18px rgba(0,0,0,0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background:
+        radial-gradient(ellipse 900px 500px at 50% -10%, rgba(201,167,106,0.08), transparent 60%),
+        var(--bg-void);
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.55;
+      overflow-x: hidden;
+      padding: 22px 14px 60px;
+    }
+
+    /* subtle brushed-metal grain overlay for the whole page */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.035;
+      background-image: repeating-linear-gradient(115deg, #fff 0px, #fff 1px, transparent 1px, transparent 3px);
+      mix-blend-mode: overlay;
+    }
+
+    a, button, input, select { font-family: inherit; }
+
+    /* ============================================================
+       MASTHEAD
+       ============================================================ */
+    .masthead {
+      max-width: 1200px;
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .masthead-brand {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+    }
+
+    .masthead-mark {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--gold-dim);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4), 0 0 14px rgba(201,167,106,0.15);
+      background: var(--bg-well);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+
+    /* Signature mark: a brass aperture-iris. Idle, it breathes gently
+       shut; once the live link is active it racks open and the blades
+       pick up a warm glow — a small, literal echo of the page's own
+       "Live Aperture" language used on the stream viewport. */
+    .iris-blades {
+      width: 100%; height: 100%;
+      transform-origin: 17px 17px;
+      transform: rotate(0deg) scale(1);
+      transition: transform 0.6s cubic-bezier(.2,.8,.2,1);
+      animation: iris-breathe 4.5s ease-in-out infinite;
+    }
+    .iris-blade {
+      fill: var(--gold-dim);
+      stroke: rgba(0,0,0,0.35);
+      stroke-width: 0.4;
+      transition: fill 0.6s ease;
+    }
+    @keyframes iris-breathe {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(4deg) scale(0.94); }
+    }
+    .masthead-mark.is-live .iris-blades {
+      transform: rotate(28deg) scale(1.12);
+      animation: none;
+    }
+    .masthead-mark.is-live .iris-blade {
+      fill: var(--gold-bright);
+    }
+    .masthead-mark.is-live {
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4), 0 0 16px rgba(236,217,168,0.55);
+    }
+
+    .masthead-titles h1 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 30px;
+      letter-spacing: 0.06em;
+      color: var(--gold-bright);
+      line-height: 1;
+    }
+
+    .masthead-titles .sub {
+      font-size: 9.5px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-top: 5px;
+    }
+
+    .masthead-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    .jewel-led {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, var(--jewel-emerald-bright), var(--jewel-emerald) 70%);
+      box-shadow: 0 0 8px rgba(79,174,130,0.7), inset 0 0 2px rgba(0,0,0,0.5);
+      animation: jewel-pulse 2.4s infinite ease-in-out;
+    }
+
+    @keyframes jewel-pulse {
+      0%, 100% { opacity: 0.55; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.15); }
+    }
+
+    /* ============================================================
+       INSTRUMENT CASE — signature element
+       Every major panel is "pinned" like a cased instrument with
+       four brass rivets at its corners plus a hairline gold edge.
+       ============================================================ */
+    .instrument-case {
+      position: relative;
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      box-shadow: var(--shadow-soft), inset 0 0 0 1px rgba(255,255,255,0.015);
+      background-image:
+        radial-gradient(circle 3.5px at 13px 13px, var(--brass) 0%, var(--gold-dim) 55%, transparent 60%),
+        radial-gradient(circle 3.5px at calc(100% - 13px) 13px, var(--brass) 0%, var(--gold-dim) 55%, transparent 60%),
+        radial-gradient(circle 3.5px at 13px calc(100% - 13px), var(--brass) 0%, var(--gold-dim) 55%, transparent 60%),
+        radial-gradient(circle 3.5px at calc(100% - 13px) calc(100% - 13px), var(--brass) 0%, var(--gold-dim) 55%, transparent 60%);
+      background-repeat: no-repeat;
+    }
+
+    /* ============================================================
+       LAYOUT
+       ============================================================ */
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (min-width: 850px) {
+      .app-container { grid-template-columns: 340px 1fr; align-items: start; }
+    }
+
+    .control-panel { padding: 22px 20px; display: flex; flex-direction: column; gap: 6px; }
+
+    .panel-header { text-align: center; padding-bottom: 16px; margin-bottom: 6px; border-bottom: 1px solid var(--border); }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--gold-bright);
+    }
+
+    .brand-tagline {
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-top: 4px;
+    }
+
+    .status-badge {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-size: 10px; color: var(--ink-muted); text-transform: uppercase;
+      letter-spacing: 0.14em; margin-top: 10px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.02em;
+      margin-top: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--border-bright), transparent);
+    }
+
+    /* form controls */
+    .control-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+
+    .control-label-row {
+      display: flex; justify-content: space-between; font-size: 10.5px;
+      text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted);
+    }
+
+    .control-value {
+      color: var(--gold-bright); font-weight: 600; font-variant-numeric: tabular-nums;
+    }
+
+    .select-input {
+      background-color: var(--bg-well); color: var(--ink);
+      border: 1px solid var(--border); border-radius: 2px;
+      padding: 8px 10px; font-family: var(--font-mono); font-size: 12px;
+      outline: none; width: 100%; cursor: pointer;
+      transition: border-color .15s ease, box-shadow .15s ease;
+      appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--gold-dim) 50%), linear-gradient(135deg, var(--gold-dim) 50%, transparent 50%);
+      background-position: calc(100% - 16px) center, calc(100% - 11px) center;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+    }
+    .select-input:focus { border-color: var(--gold-dim); box-shadow: 0 0 0 1px var(--gold-dim), 0 0 10px rgba(201,167,106,0.15); }
+
+    .range-input {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 2px; background: var(--border-bright);
+      border-radius: 1px; outline: none; margin: 10px 0; cursor: pointer;
+    }
+    .range-input::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 13px; height: 13px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 55%, var(--gold-dim) 100%);
+      box-shadow: 0 0 8px rgba(201,167,106,0.55), inset 0 0 2px rgba(0,0,0,0.4);
+      cursor: pointer; border: 1px solid rgba(0,0,0,0.3);
+      transition: transform 0.15s ease;
+    }
+    .range-input::-webkit-slider-thumb:hover { transform: scale(1.25); }
+    .range-input::-moz-range-thumb {
+      width: 13px; height: 13px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.3);
+      background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 55%, var(--gold-dim) 100%);
+      box-shadow: 0 0 8px rgba(201,167,106,0.55); cursor: pointer;
+    }
+
+    .toggle-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.025);
+    }
+    .toggle-row:last-child { border-bottom: none; }
+
+    .toggle-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink); }
+
+    .switch { position: relative; display: inline-block; width: 36px; height: 17px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer; inset: 0;
+      background-color: var(--bg-well);
+      border: 1px solid var(--border-bright);
+      transition: .2s; border-radius: 9px;
+    }
+    .slider:before {
+      position: absolute; content: "";
+      height: 11px; width: 11px; left: 2px; bottom: 2px;
+      background: radial-gradient(circle at 35% 30%, #cfc7b2, #8f8a76 80%);
+      transition: .2s; border-radius: 50%;
+    }
+    input:checked + .slider { background-color: rgba(47,92,70,0.35); border-color: var(--jewel-emerald-bright); }
+    input:checked + .slider:before {
+      transform: translateX(19px);
+      background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 70%);
+      box-shadow: 0 0 6px var(--gold);
+    }
+
+    /* ============================================================
+       VIEWER
+       ============================================================ */
+    .viewer-panel { display: flex; flex-direction: column; gap: 18px; }
+
+    .stream-container { display: flex; flex-direction: column; overflow: hidden; }
+
+    .hud-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 13px 18px; background-color: var(--bg-panel-raised);
+      border-bottom: 1px solid var(--border);
+      font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.1em;
+    }
+
+    .hud-title { font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 9px; font-family: var(--font-mono); }
+    .hud-signal-strength { color: var(--gold); font-weight: 600; }
+
+    .stream-frame-outer { padding: 18px; background: var(--bg-well); }
+
+    .stream-frame-wrapper {
+      position: relative; width: 100%; background-color: #000;
+      aspect-ratio: 4/3; max-width: 640px; margin: 0 auto;
+      display: flex; justify-content: center; align-items: center;
+      border: 1px solid var(--border-bright);
+      box-shadow: 0 0 0 6px var(--bg-panel), 0 0 0 7px var(--border), var(--shadow-deep);
+    }
+
+    #stream { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4/3; }
+
+    /* bezel index ticks — the optical-instrument signature, echoed
+       from the corner rivets on every case panel */
+    .hud-corners::before, .hud-corners::after,
+    .hud-corners-bottom::before, .hud-corners-bottom::after {
+      content: ""; position: absolute; width: 18px; height: 18px;
+      border: 1px solid transparent; pointer-events: none; z-index: 10;
+    }
+    .hud-corners::before { top: 10px; left: 10px; border-top-color: var(--gold); border-left-color: var(--gold); }
+    .hud-corners::after { top: 10px; right: 10px; border-top-color: var(--gold); border-right-color: var(--gold); }
+    .hud-corners-bottom::before { bottom: 10px; left: 10px; border-bottom-color: var(--gold); border-left-color: var(--gold); }
+    .hud-corners-bottom::after { bottom: 10px; right: 10px; border-bottom-color: var(--gold); border-right-color: var(--gold); }
+
+    .stream-offline-overlay {
+      position: absolute; inset: 0; background: rgba(8,7,4,0.96); z-index: 5;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 14px;
+    }
+
+    .offline-glyph {
+      width: 44px; height: 44px; border: 1px solid var(--gold-dim); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .offline-title { font-family: var(--font-display); font-style: italic; font-size: 17px; letter-spacing: 0.02em; color: var(--gold-bright); }
+    .offline-sub { font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-faint); }
+
+    .static-noise-effect {
+      position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.06;
+      pointer-events: none; z-index: 4;
+      background-image: repeating-radial-gradient(circle, #fff, #000 10%, #fff 21%);
+      animation: static-play 0.5s infinite;
+    }
+    @keyframes static-play {
+      0% { transform: scale(1) translate(0); }
+      50% { transform: scale(1.1) translate(2px, -1px); }
+      100% { transform: scale(0.95) translate(-1px, 2px); }
+    }
+
+    /* buttons */
+    .btn {
+      background-color: var(--bg-well);
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      font-family: var(--font-mono); font-size: 10.5px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 11px 14px; border-radius: 2px; cursor: pointer;
+      transition: all 0.15s ease-in-out; text-align: center; display: block; width: 100%; outline: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+    .btn:hover { background-color: rgba(201,167,106,0.1); color: var(--gold-bright); box-shadow: 0 0 12px rgba(201,167,106,0.18), inset 0 1px 0 rgba(255,255,255,0.05); }
+    .btn:active { transform: scale(0.98); }
+
+    .btn-danger { border-color: var(--jewel-ruby-bright); color: var(--jewel-ruby-bright); }
+    .btn-danger:hover { background-color: rgba(122,43,43,0.18); color: #f0a89c; box-shadow: 0 0 12px rgba(217,96,79,0.2); }
+
+    .btn-success { background-color: var(--gold-dim); color: var(--bg-void); border-color: var(--gold); font-weight: 700; }
+    .btn-success:hover { background-color: var(--gold-bright); color: var(--bg-void); box-shadow: 0 0 16px rgba(236,217,168,0.4); }
+
+    .buttons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .stream-actions { padding: 16px 18px; background-color: var(--bg-panel-raised); border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px; }
+
+    /* bottom deck */
+    .bottom-info-deck { padding: 18px; display: grid; grid-template-columns: 1fr; gap: 18px; }
+    @media (min-width: 600px) { .bottom-info-deck { grid-template-columns: repeat(3, 1fr); } }
+
+    .info-stat-card { display: flex; flex-direction: column; gap: 7px; }
+    .info-stat-label { font-size: 9.5px; text-transform: uppercase; color: var(--ink-faint); letter-spacing: 0.12em; }
+    .info-stat-value { font-size: 12.5px; font-weight: 600; color: var(--ink); }
+
+    #react-hud-island {
+      border: 1px solid var(--border);
+      background: var(--bg-panel-raised);
+      border-radius: 3px;
+    }
+
+    /* console */
+    /* ============================================================
+       CLOUD VAULT — Google Drive backup, merged in from the second
+       source sketch. Styled as another cased instrument panel so it
+       reads as a native part of the console, not a bolted-on widget.
+       ============================================================ */
+    .vault-panel { padding: 18px; }
+
+    .vault-header {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 10px; flex-wrap: wrap; margin-bottom: 14px;
+    }
+
+    .vault-header .section-title { margin: 0; flex: 1 1 auto; }
+
+    .vault-pill {
+      font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--ink-faint); border: 1px solid var(--border-bright);
+      border-radius: 20px; padding: 4px 10px; white-space: nowrap;
+    }
+    .vault-pill.linked { color: var(--jewel-emerald-bright); border-color: var(--jewel-emerald-bright); }
+
+    .vault-body {
+      display: grid; grid-template-columns: 1fr; gap: 16px;
+    }
+    @media (min-width: 600px) { .vault-body { grid-template-columns: 1.1fr 1fr; align-items: center; } }
+
+    .vault-actions { display: flex; flex-direction: column; gap: 10px; }
+    .vault-hint { font-size: 10px; color: var(--ink-faint); line-height: 1.6; }
+
+    .vault-record {
+      background: var(--bg-well); border: 1px solid var(--border);
+      border-radius: 2px; padding: 12px 14px;
+    }
+    .vault-record-label {
+      font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--ink-faint); margin-bottom: 6px;
+    }
+    .vault-record-value {
+      font-size: 11.5px; color: var(--ink); word-break: break-word; line-height: 1.6;
+    }
+    .vault-record-value.empty { color: var(--ink-faint); font-style: normal; }
+    .vault-record a { color: var(--link, var(--gold)); text-decoration: none; border-bottom: 1px dotted var(--gold-dim); }
+    .vault-record a:hover { color: var(--gold-bright); }
+
+    .console-deck { background-color: var(--bg-well); border: 1px solid var(--border); border-radius: 3px; font-size: 11px; color: var(--ink-muted); }
+    .console-title {
+      background-color: var(--bg-panel-raised); padding: 8px 14px; border-bottom: 1px solid var(--border);
+      color: var(--gold); font-weight: 600; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.14em;
+      display: flex; justify-content: space-between;
+    }
+    .console-title span[onclick] { cursor: pointer; color: var(--ink-faint); }
+    .console-title span[onclick]:hover { color: var(--gold); }
+    .console-log { padding: 12px 14px; height: 84px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
+    .console-log::-webkit-scrollbar { width: 5px; }
+    .console-log::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+    .log-line { font-size: 10px; display: flex; gap: 9px; }
+    .log-timestamp { color: var(--ink-faint); }
+    .log-method { color: var(--gold); font-weight: 600; }
+    .log-text { color: var(--ink); word-break: break-all; }
+
+    footer.masthead-status-line {
+      max-width: 1200px; margin: 26px auto 0; text-align: center;
+      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint);
+    }
