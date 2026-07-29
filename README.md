@@ -9,64 +9,67 @@
 <p>
   <img src="https://img.shields.io/badge/Arduino-00979D?style=flat-square&logo=arduino&logoColor=white"/>
   <img src="https://img.shields.io/badge/ESP32--CAM-E7352C?style=flat-square&logo=espressif&logoColor=white"/>
-  <img src="https://img.shields.io/badge/AI%20Powered-FF6F00?style=flat-square&logo=tensorflow&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Artificial%20Intelligence-FF6F00?style=flat-square&logo=tensorflow&logoColor=white"/>
   <img src="https://img.shields.io/badge/Bluetooth%20Audio-0082FC?style=flat-square&logo=bluetooth&logoColor=white"/>
   <img src="https://img.shields.io/badge/Google%20Drive-4285F4?style=flat-square&logo=googledrive&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Google%20Sheets-34A853?style=flat-square&logo=googlesheets&logoColor=white"/>
 </p>
 
-> **An intelligent wearable assistant that transforms the surrounding world into real-time spoken awareness.**
+> **Transforming the surrounding world into meaningful spoken awareness through Artificial Intelligence and Embedded Vision.**
 
-*Empowering independent navigation through embedded systems, computer vision, artificial intelligence, and natural voice feedback.*
-
-<br>
-
-**⚡ Real-Time Detection • 🧠 AI Vision • 📡 IoT Connectivity • 🔊 Voice Guidance • ☁️ Cloud Storage**
+*EOS is an intelligent wearable assistive platform that combines Embedded Systems, Computer Vision, Artificial Intelligence, IoT, and Cloud Computing to improve environmental awareness and independent mobility for visually impaired individuals.*
 
 <br>
 
-**[▶ Obstacle Detection Demo](https://wokwi.com/projects/461059082332944385)**  • 
-**[▶ Camera & AI Demo](https://wokwi.com/projects/450003284696400897)**
+**⚡ Edge Computing • 🧠 AI Vision • 📡 IoT Connectivity • 🔊 Voice Assistance • ☁️ Cloud Integration**
+
+<br>
+
+**[▶ Obstacle Detection Demo](https://wokwi.com/projects/461059082332944385)** • **[▶ Camera Module Demo](https://wokwi.com/projects/450003284696400897)**
 
 </div>
 
 ---
 
-# Overview
+# 📖 Overview
 
-EOS is an intelligent wearable assistance platform designed to improve environmental awareness for visually impaired individuals.
+EOS (Eye-Oriented Smart Assistant) is an AI-powered wearable platform designed to enhance environmental perception for visually impaired individuals.
 
-The system combines embedded electronics, computer vision, artificial intelligence, wireless communication, and cloud technologies to transform visual information into meaningful spoken guidance.
+The system combines embedded electronics, computer vision, cloud technologies, and intelligent voice interaction into a unified assistive solution capable of understanding the surrounding environment in real time.
 
-Nearby obstacles are detected instantly through dedicated hardware with virtually zero latency, while distant scenes are analyzed using AI to recognize objects, identify people, and extract readable text.
+A dedicated embedded subsystem continuously detects nearby obstacles with minimal latency, while an ESP32-CAM captures images that are securely transferred to an AI server for advanced visual analysis, including object detection, optical character recognition (OCR), and face recognition.
 
-At the same time, a companion can remotely monitor the user's surroundings through a lightweight web dashboard, providing an additional layer of safety whenever assistance is needed.
+To improve safety and accessibility, a secure web dashboard enables an authorized companion to remotely monitor the camera, capture images, configure camera settings, and automatically synchronize every captured frame with Google Drive while recording its metadata inside Google Sheets.
+
+EOS follows a modular architecture, allowing future AI models and hardware components to be integrated without redesigning the overall system.
 
 ---
 
 # ✨ Key Features
 
-* ⚡ **Real-Time Obstacle Detection** using an ultrasonic sensor for immediate hazard awareness.
-* 📷 **Remote Camera Control** through a web dashboard accessible by a companion.
-* 🧠 **AI-Powered Scene Understanding** including Object Detection, OCR, and Face Recognition.
-* 🔊 **Natural Voice Feedback** delivered directly to the user via Bluetooth audio.
-* ☁️ **Automatic Cloud Backup** with every captured image securely stored on Google Drive.
-* 📡 **Wireless Communication** between hardware modules, cloud services, and dashboard.
-* 🏗️ **Modular Architecture** designed for future expansion and AI upgrades.
+- ⚡ **Real-Time Obstacle Detection** using an HC-SR04 ultrasonic sensor with immediate buzzer feedback.
+- 📷 **Remote ESP32-CAM Management** through a secure cloud dashboard.
+- 🔐 **PIN-Protected Dashboard Authentication** to prevent unauthorized access.
+- 🎛 **Live Camera Configuration** including brightness, exposure, white balance, quality, and flash control.
+- 📸 **Remote Image Capture** with instant preview.
+- ☁️ **Automatic Google Drive Backup** for every captured image.
+- 📊 **Automatic Google Sheets Logging** with timestamps and image metadata.
+- 🧠 **AI Scene Understanding** through Object Detection, OCR, and Face Recognition.
+- 🔊 **Bluetooth Voice Feedback** for recognized objects.
+- 📡 **Cloud-Based Monitoring** for remote assistance.
+- 🏗 **Modular Edge-to-Cloud Architecture** for future scalability.
 
 ---
 
-# How It Works
+# ⚙ System Operation
 
-<table>
-<tr>
+EOS operates through two complementary processing layers.
 
-<td width="50%" valign="top">
+### Edge Layer
 
-### ⚡ Edge Awareness
+The wearable hardware continuously monitors the user's surroundings using the HC-SR04 ultrasonic sensor.
 
-The Arduino continuously monitors the environment using an HC-SR04 ultrasonic sensor.
-
-Whenever an obstacle enters the predefined safety zone (10 cm), the buzzer immediately alerts the user without requiring any network connection or AI processing.
+Whenever an obstacle enters the predefined safety distance, the Arduino immediately activates the buzzer, ensuring obstacle awareness without relying on internet connectivity or cloud services.
 
 ```cpp
 distance = duration * 0.034 / 2;
@@ -76,36 +79,37 @@ if (distance > 0 && distance < 10) {
 }
 ```
 
-</td>
+---
 
-<td width="50%" valign="top">
+### AI Layer
 
-### 🧠 AI Vision Pipeline
+Whenever visual analysis is required, an authorized companion can remotely capture an image using the secure web dashboard.
 
-The companion can remotely trigger the ESP32-CAM to capture an image.
+The captured image is automatically:
 
-The captured frame is securely uploaded to the AI server where it undergoes:
-
-* Object Detection
-* OCR
-* Face Recognition
-
-The generated result is converted into speech, transmitted via Bluetooth, and finally archived to Google Drive.
-
-</td>
-
-</tr>
-</table>
+1. Captured by the ESP32-CAM.
+2. Uploaded to the AI server.
+3. Analyzed using computer vision models.
+4. Converted into natural language.
+5. Delivered to the user through Bluetooth audio.
+6. Archived in Google Drive.
+7. Logged inside Google Sheets.
 
 ---
 
-# AI Processing Flow
+# 🤖 AI Processing Pipeline
 
 ```text
+ESP32-CAM
+      │
+      ▼
 Capture Image
       │
       ▼
 Upload to AI Server
+      │
+      ▼
+Image Processing
       │
       ▼
 Object Detection
@@ -113,63 +117,72 @@ OCR
 Face Recognition
       │
       ▼
-Generate Speech
+Generate Natural Description
       │
       ▼
-Bluetooth Audio Feedback
+Bluetooth Voice Feedback
       │
       ▼
-Cloud Storage + Web Dashboard
+Google Drive Archive
+      │
+      ▼
+Google Sheets Logging
 ```
 
 ---
 
-# System Architecture
+# 🏗 System Architecture
 
-EOS follows a distributed Edge-to-Cloud architecture.
+EOS adopts a hybrid **Edge-to-Cloud Architecture**.
 
-Time-critical obstacle detection executes locally on the wearable hardware, while computationally intensive computer vision tasks are processed on an external AI server.
+Critical operations requiring immediate response, such as obstacle detection, are executed locally on the wearable device, while computationally intensive vision tasks are performed on a dedicated AI server.
 
-This hybrid architecture delivers both immediate responsiveness and advanced visual intelligence.
+This design achieves both low-latency responsiveness and advanced visual intelligence while maintaining a lightweight embedded platform.
 
-<img width="1356" height="910" alt="image" src="https://github.com/user-attachments/assets/acaf53f5-ca13-422e-bbd6-6e749b7fab57" />
-
-
----
-
-# Tech Stack
-
-| Category         | Technologies                            |
-| ---------------- | --------------------------------------- |
-| Embedded Systems | Arduino, ESP32-CAM                      |
-| Sensors          | HC-SR04 Ultrasonic Sensor               |
-| AI               | Object Detection, OCR, Face Recognition |
-| Communication    | WiFi, Bluetooth                         |
-| Backend          | PHP                                     |
-| Frontend         | HTML, CSS, JavaScript                   |
-| Cloud Storage    | Google Drive                            |
+<p align="center">
+<img src="images/system-architecture.png" width="90%">
+</p>
 
 ---
 
-# Why EOS?
+# 🛠 Technology Stack
 
-EOS represents more than a graduation project.
-
-It demonstrates the integration of Embedded Systems, IoT, Computer Vision, Artificial Intelligence, Cloud Computing, and Web Development into a unified assistive platform capable of solving a real-world accessibility challenge.
-
-Rather than simply identifying objects, EOS was designed to enhance environmental awareness, improve independent mobility, and provide visually impaired users with greater confidence in navigating everyday life.
+| Category | Technologies |
+|------------|--------------------------------------------|
+| Embedded Systems | Arduino Nano, ESP32-CAM |
+| Camera | OV2640 |
+| Sensors | HC-SR04 Ultrasonic Sensor |
+| Artificial Intelligence | Object Detection, OCR, Face Recognition |
+| Backend | PHP |
+| Frontend | HTML, CSS, JavaScript |
+| Cloud Services | Google Drive, Google Sheets, Google Apps Script |
+| Communication | UART, Wi-Fi, Bluetooth |
+| Development Tools | Arduino IDE, VS Code, Git, GitHub |
 
 ---
 
-# 🚀 Roadmap
+# 🌟 Why EOS?
 
-* [ ] Custom wearable PCB
-* [ ] Edge AI inference directly on the device
-* [ ] Real-time video understanding
-* [ ] Dedicated mobile application
-* [ ] Indoor navigation assistance
-* [ ] Emergency SOS system
-* [ ] Multi-language voice feedback
+EOS is more than a graduation project—it is an integrated assistive platform that demonstrates the convergence of Embedded Systems, Artificial Intelligence, Computer Vision, Cloud Computing, IoT, and Web Technologies.
+
+Rather than simply detecting nearby obstacles, EOS aims to improve environmental understanding by converting visual information into meaningful spoken guidance, helping visually impaired users navigate daily life with greater confidence, safety, and independence.
+
+---
+
+# 🚀 Future Roadmap
+
+- [ ] Edge AI inference directly on the ESP32.
+- [ ] Real-time video object detection.
+- [ ] Indoor navigation assistance.
+- [ ] GPS outdoor navigation.
+- [ ] Currency recognition.
+- [ ] Smart OCR for documents.
+- [ ] Emergency SOS module.
+- [ ] Dedicated Android & iOS application.
+- [ ] Multi-language voice interaction.
+- [ ] Custom wearable PCB.
+- [ ] Battery management system.
+- [ ] Offline AI capabilities.
 
 ---
 
@@ -177,8 +190,8 @@ Rather than simply identifying objects, EOS was designed to enhance environmenta
 
 ## Engineering Technology That Restores Confidence Through Intelligence
 
-Designed and developed as an assistive AI platform combining **Embedded Systems**, **IoT**, **Computer Vision**, **Artificial Intelligence**, and **Cloud Technologies**.
+Designed and developed as an intelligent assistive platform integrating **Embedded Systems**, **Artificial Intelligence**, **Computer Vision**, **Cloud Computing**, and **IoT** technologies.
 
-**⭐ If you found this project interesting, consider giving it a Star!**
+### ⭐ If you found this project valuable, consider giving it a Star!
 
 </div>
