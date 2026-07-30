@@ -140,7 +140,8 @@ Critical operations requiring immediate response, such as obstacle detection, ar
 This design achieves both low-latency responsiveness and advanced visual intelligence while maintaining a lightweight embedded platform.
 
 <p align="center">
-<img src="images/system-architecture.png" width="90%">
+<img width="638" height="695" alt="Screenshot 2026-07-30 030059" src="https://github.com/user-attachments/assets/4b4443dd-389e-44a3-8d6a-254c663fa5ad" />
+
 </p>
 
 ---
